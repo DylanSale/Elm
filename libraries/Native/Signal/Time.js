@@ -34,11 +34,33 @@ Elm.Native.Time.make = function(elm) {
     return A3( Signal.lift2, F2(f), isOn, ticker );
   }
 
+  var requestAnimFrame = function() {
+    return (
+        window.requestAnimationFrame       || 
+        window.webkitRequestAnimationFrame || 
+        window.mozRequestAnimationFrame    || 
+        window.oRequestAnimationFrame      || 
+        window.msRequestAnimationFrame     || 
+        function(/* function */ callback){
+            window.setTimeout(callback, 1000 / 60);
+        }
+    );
+  }();
+
   function every(t) {
     var clock = Signal.constant(Date.now());
-    setInterval(function() {
+    if (t == 0) {
+	function callback() {
+	  elm.notify(clock.id, Date.now());
+	  requestAnimFrame(callback);
+	};
+	requestAnimFrame(callback);	
+    }
+    else {
+      setInterval(function() {
         elm.notify(clock.id, Date.now());
-    }, t);
+      }, t);
+    }
     return clock;
   }
 

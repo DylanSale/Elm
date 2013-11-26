@@ -26,6 +26,10 @@ type Time = Float
 {-| Units of time, making it easier to specify things like a half-second
 `(500 * milliseconds)` without remembering Elm&rsquo;s underlying units of time.
 -}
+
+frame : Time
+frame = 0
+
 millisecond : Time
 millisecond = 1
 
